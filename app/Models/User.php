@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -58,5 +59,18 @@ class User extends Authenticatable implements HasName
     public function getFilamentName(): string
     {
         return Str::headline($this->name);
+    }
+
+    /**
+     * Get the team that the user belongs to.
+     *
+     * Defines a many-to-one relationship where each user 
+     * belongs to a single team.
+     *
+     * @return BelongsTo<\App\Models\Team, self>
+     */
+    public function team(): BelongsTo
+    {
+        return $this->belongsTo(Team::class);
     }
 }
