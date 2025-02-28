@@ -38,7 +38,7 @@ class Team extends Model
      */
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(self::class, 'parent_key');
+        return $this->belongsTo(self::class, 'parent_key', 'key');
     }
 
     /**
@@ -51,7 +51,7 @@ class Team extends Model
      */
     public function children(): HasMany
     {
-        return $this->hasMany(Team::class, 'parent_key');
+        return $this->hasMany(self::class, 'parent_key', 'key');
     }
 
     /**
