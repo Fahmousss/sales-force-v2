@@ -17,9 +17,22 @@ class Team extends Model
      */
     protected $fillable = [
         'name',
+        'type',
         'key',
         'parent_key',
     ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'type' => \App\Enums\TeamType::class,
+        ];
+    }
 
 
     /**
