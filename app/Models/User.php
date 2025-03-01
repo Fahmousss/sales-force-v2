@@ -84,26 +84,66 @@ class User extends Authenticatable implements HasName, FilamentUser, HasTenants,
         return $this->belongsTo(Team::class);
     }
 
+    /**
+     * Determine if the user can access a specific tenant.
+     *
+     * This method checks whether the user's `team_id` matches the given tenant's ID.
+     *
+     * @param Model $tenant The tenant instance to check.
+     * @return bool True if the user can access the tenant, otherwise false.
+     */
     public function canAccessTenant(Model $tenant): bool
     {
         return $this->team_id === $tenant->id;
     }
 
+    /**
+     * Retrieve the list of tenants accessible to the user.
+     *
+     * Currently, this method returns an empty collection, but it can be extended
+     * to return the list of tenants based on user roles or permissions.
+     *
+     * @param Panel $panel The Filament panel instance.
+     * @return array|Collection The list of accessible tenants.
+     */
     public function getTenants(Panel $panel): array|Collection
     {
         return [];
     }
 
+    /**
+     * Get the default tenant for the user.
+     *
+     * This method returns the team associated with the user as the default tenant.
+     *
+     * @param Panel $panel The Filament panel instance.
+     * @return Model|null The default tenant (team) or null if not found.
+     */
     public function getDefaultTenant(Panel $panel): ?Model
     {
         return $this->team;
     }
 
+    /**
+     * Check if the user is a super admin.
+     *
+     * This method verifies if the user has the `SUPER_ADMIN` role.
+     *
+     * @return bool True if the user is a super admin, otherwise false.
+     */
     public function isSuperAdmin(): bool
     {
         return $this->hasRole(UserRole::SUPER_ADMIN);
     }
 
+    /**
+     * Determine if the user can access the given Filament panel.
+     *
+     * This method checks whether the user has an associated team.
+     *
+     * @param Panel $panel The Filament panel instance.
+     * @return bool True if the user has an associated team, otherwise false.
+     */
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->team->exists;
