@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserRole;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasDefaultTenant;
 use Filament\Models\Contracts\HasName;
@@ -96,6 +97,11 @@ class User extends Authenticatable implements HasName, FilamentUser, HasTenants,
     public function getDefaultTenant(Panel $panel): ?Model
     {
         return $this->team;
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole(UserRole::SUPER_ADMIN);
     }
 
     public function canAccessPanel(Panel $panel): bool
