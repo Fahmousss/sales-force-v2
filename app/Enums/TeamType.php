@@ -47,7 +47,7 @@ enum TeamType: string implements HasLabel
             self::KANTOR_CABANG_UTAMA =>
             [
                 self::KANTOR_CABANG->value,
-                self::KANTOR_CABANG_PEMBANTU
+                self::KANTOR_CABANG_PEMBANTU->value
             ],
         };
     }
