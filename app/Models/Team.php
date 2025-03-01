@@ -124,4 +124,17 @@ class Team extends Model
     {
         return $this->getAllDescendants($ancestor)->contains('id', $this->id);
     }
+
+    /**
+     * Get the total number of users (members) in the team.
+     *
+     * This function returns the count of users associated with the team.
+     * It queries the `users` relationship and counts the number of records.
+     *
+     * @return int The total number of users in the team.
+     */
+    public function getMemberCount(): int
+    {
+        return $this->users()->count();
+    }
 }
