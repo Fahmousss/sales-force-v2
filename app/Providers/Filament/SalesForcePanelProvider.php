@@ -61,6 +61,8 @@ class SalesForcePanelProvider extends PanelProvider
             ])
             ->plugins([
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
-            ]);
+            ])
+            ->tenant(\App\Models\Team::class, slugAttribute: 'key')
+        ;
     }
 }
