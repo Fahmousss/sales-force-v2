@@ -32,9 +32,23 @@ enum TeamType: string implements HasLabel
     public function allowedChildren(): array
     {
         return match ($this) {
-            self::KANTOR_PUSAT => [self::KANTOR_PUSAT->value, self::KANTOR_REGIONAL->value, self::KANTOR_CABANG_UTAMA->value, self::KANTOR_CABANG->value, self::KANTOR_CABANG_PEMBANTU->value],
-            self::KANTOR_REGIONAL => [self::KANTOR_CABANG_UTAMA->value, self::KANTOR_CABANG->value, self::KANTOR_CABANG_PEMBANTU->value],
-            self::KANTOR_CABANG_UTAMA => [self::KANTOR_CABANG->value, self::KANTOR_CABANG_PEMBANTU],
+            self::KANTOR_PUSAT =>
+            [
+                self::KANTOR_PUSAT->value,
+                self::KANTOR_REGIONAL->value,
+                self::KANTOR_CABANG_UTAMA->value,
+                self::KANTOR_CABANG->value,
+                self::KANTOR_CABANG_PEMBANTU->value
+            ],
+            self::KANTOR_REGIONAL =>
+            [
+                self::KANTOR_CABANG_UTAMA->value,
+            ],
+            self::KANTOR_CABANG_UTAMA =>
+            [
+                self::KANTOR_CABANG->value,
+                self::KANTOR_CABANG_PEMBANTU
+            ],
         };
     }
 }
