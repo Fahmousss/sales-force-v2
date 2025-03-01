@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\ScopedBy;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -71,5 +71,44 @@ class Team extends Model
     public function descendants(): HasMany
     {
         return $this->children()->with('descendants');
+    }
+
+    /**
+     * Get all descendant teams of the current team.
+     *
+     * This method retrieves all child teams recursively.
+     *
+     * @return \Illuminate\Support\Collection A collection of descendant teams.
+     */
+    public function getDescendants()
+    {
+        return $this->getAllDescendants($this);
+    }
+
+    /**
+     * Recursively retrieve all descendant teams of a given team.
+     *
+     * This method traverses the hierarchy and collects all child teams.
+     *
+     * @param self $team The team instance whose descendants are to be retrieved.
+     * @return \Illuminate\Support\Collection A collection of all descendant teams.
+     */
+    public function getAllDescendants($team)
+    {
+        return $team->children->flatMap(fn($child) => collect([$child])->merge($this->getAllDescendants($child)));
+    }
+
+    /**
+     * Check if the current team is a descendant of a given ancestor team.
+     *
+     * This method verifies whether the current team exists in the 
+     * hierarchy of the specified ancestor team.
+     *
+     * @param self $ancestor The ancestor team to check against.
+     * @return bool True if the current team is a descendant, otherwise false.
+     */
+    public function isDescendantOf($ancestor)
+    {
+        return $this->getAllDescendants($ancestor)->contains('id', $this->id);
     }
 }
