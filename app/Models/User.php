@@ -8,10 +8,10 @@ use Filament\Models\Contracts\HasDefaultTenant;
 use Filament\Models\Contracts\HasName;
 use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-// use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
@@ -72,6 +72,24 @@ class User extends Authenticatable implements HasName, FilamentUser, HasTenants,
     }
 
     /**
+     * Get the formatted name attribute.
+     * 
+     * This accessor automatically converts the stored `name` value into a 
+     * headline format (e.g., "john doe" → "John Doe") when accessed.
+     * 
+     * Caching is enabled using `shouldCache()` to optimize performance 
+     * and avoid redundant processing.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn(string $value) => Str::headline($value),
+        )->shouldCache();
+    }
+
+    /**
      * Get the team that the user belongs to.
      *
      * Defines a many-to-one relationship where each user 
@@ -125,15 +143,15 @@ class User extends Authenticatable implements HasName, FilamentUser, HasTenants,
     }
 
     /**
-     * Check if the user is a super admin.
+     * Check if the user is a scoped to tenant.
      *
-     * This method verifies if the user has the `SUPER_ADMIN` role.
+     * This method verifies if the user has the `SUPER_ADMIN` role or `ADMIN` role.
      *
-     * @return bool True if the user is a super admin, otherwise false.
+     * @return bool True if the user is a verified, otherwise false.
      */
-    public function isSuperAdmin(): bool
+    public function isNotScopedToTenant(): bool
     {
-        return $this->hasRole(UserRole::SUPER_ADMIN);
+        return $this->hasRole([UserRole::SUPER_ADMIN, UserRole::ADMIN]);
     }
 
     /**
